@@ -14,6 +14,7 @@ from datetime import timedelta
 import os
 from pathlib import Path
 import dotenv
+from datetime import datetime, timedelta
 
 dotenv.read_dotenv()
 
@@ -31,7 +32,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG') == 'True'
 # DEBUG = False
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
