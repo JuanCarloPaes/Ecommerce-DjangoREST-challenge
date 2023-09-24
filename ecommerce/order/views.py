@@ -97,3 +97,26 @@ def new_order(request):
 
         serializer = OrderSerializer(order, many=False)
         return Response(serializer.data)
+    
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def process_order(request, pk):
+    order = get_object_or_404(Order, id=pk)
+
+    order.status = request.data['status']
+
+    order.save()
+
+    serializer = OrderSerializer(order, many=False)
+
+    return Response({'order': serializer.data})
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_order(request, pk):
+    order = get_object_or_404(Order, id=pk)
+
+    order.delete()
+
+    return Response({'details': 'Order is deleted.'})
