@@ -100,7 +100,7 @@ def new_order(request):
     
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def process_order(request, pk):
     order = get_object_or_404(Order, id=pk)
 
