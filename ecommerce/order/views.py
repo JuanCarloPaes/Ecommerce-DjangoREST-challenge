@@ -13,7 +13,7 @@ from .serializers import OrderSerializer
 from product.models import Product
 from rest_framework.pagination import PageNumberPagination
 
-from .models import Order, OrderItems
+from .models import Order, OrderItem
 import stripe
 from utils.helpers import get_current_host
 
@@ -86,7 +86,7 @@ def new_order(request):
         for i in order_items:
             product = Product.objects.get(id=i['product'])
 
-            item = OrderItems.objects.create(
+            item = OrderItem.objects.create(
                 product=product,
                 order=order,
                 name=product.name,
@@ -180,6 +180,7 @@ def create_checkout_session(request):
 
     return Response({ 'session': session })
 
+
 @api_view(['POST'])
 def stripe_webhook(request):
 
@@ -192,14 +193,51 @@ def stripe_webhook(request):
         event = stripe.Webhook.construct_event(
             payload, sig_header, webhook_secret
         )
+
     except ValueError as e:
         return Response({ 'error': 'Invalid Payload' }, status=status.HTTP_400_BAD_REQUEST)
     except stripe.error.SignatureVerificationError as e:
-        return Response ({ 'error': 'Invalid Signature' }, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response({ 'error': 'Invalid signature' }, status=status.HTTP_400_BAD_REQUEST)
+
+
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
 
-        print('session', session)
+        line_items = stripe.checkout.Session.list_line_items(session['id'])
 
-        return Response({ 'details': 'Payment Successful' })
+        price = session['amount_total'] / 100
+
+        order = Order.objects.create(
+            user = User(session.metadata.user),
+            street = session.metadata.street,
+            city = session.metadata.city,
+            state = session.metadata.state,
+            zip_code = session.metadata.zip_code,
+            phone_no = session.metadata.phone_no,
+            country = session.metadata.country,
+            total_amount = price,
+            payment_mode="Card",
+            payment_status="PAID"
+        )
+
+        for item in line_items['data']:
+
+            line_product = stripe.Product.retrieve(item.price.product)
+            product_id = line_product.metadata.product_id
+
+            product = Product.objects.get(id=product_id)
+
+            item = OrderItem.objects.create(
+                product=product,
+                order=order,
+                name = product.name,
+                quantity = item.quantity,
+                price = item.price.unit_amount / 100,
+                image = line_product.images[0]
+            )
+
+            product.stock -= item.quantity
+            product.save()
+
+
+        return Response({ 'details': 'Payment successful' })
