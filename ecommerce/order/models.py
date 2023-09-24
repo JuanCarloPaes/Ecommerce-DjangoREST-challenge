@@ -26,7 +26,7 @@ class Order(models.Model):
     country = models.CharField(max_length=100, default="", blank=False)
     total_amount = models.IntegerField(default=0)
     
-    paymentStatus = models.CharField(
+    payment_status = models.CharField(
         max_length=20,
         choices=PaymentStatus.choices,
         default=PaymentStatus.UNPAID

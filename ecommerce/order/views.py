@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .serializers import OrderSerializer
+from .filters import OrdersFilter
 
 from product.models import Product
 from rest_framework.pagination import PageNumberPagination
@@ -17,11 +18,25 @@ from .models import Order, OrderItems
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_orders(request):
-    orders = Order.objects.all()
 
-    serializer = OrderSerializer(orders, many=True)
+    filterset = OrdersFilter(request.GET, queryset=Order.objects.all().order_by('id'))
 
-    return Response ({'orders': serializer.data})    
+    count = filterset.qs.count()
+
+    # Pagination
+    resPerPage = 1
+    paginator = PageNumberPagination()
+    paginator.page_size = resPerPage
+
+    queryset = paginator.paginate_queryset(filterset.qs, request)
+
+    serializer = OrderSerializer(queryset, many=True)
+
+    return Response({
+        "count": count,
+        "resPerPage": resPerPage,
+        'orders': serializer.data
+        })
 
 
 @api_view(['GET'])
@@ -31,9 +46,7 @@ def get_order(request, pk):
 
     serializer = OrderSerializer(order, many=False)
 
-    return Response ({'order': serializer.data})    
-
-
+    return Response({'order': serializer.data})
 
 
 @api_view(['POST'])
