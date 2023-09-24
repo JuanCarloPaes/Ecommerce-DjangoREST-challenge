@@ -179,3 +179,27 @@ def create_checkout_session(request):
     )
 
     return Response({ 'session': session })
+
+@api_view(['POST'])
+def stripe_webhook(request):
+
+    webhook_secret = os.environ.get('STRIPE_WEBHOOK_SECRET')
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, webhook_secret
+        )
+    except ValueError as e:
+        return Response({ 'error': 'Invalid Payload' }, status=status.HTTP_400_BAD_REQUEST)
+    except stripe.error.SignatureVerificationError as e:
+        return Response ({ 'error': 'Invalid Signature' }, status=status.HTTP_400_BAD_REQUEST)
+    
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+
+        print('session', session)
+
+        return Response({ 'details': 'Payment Successful' })
