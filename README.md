@@ -1,7 +1,6 @@
 ﻿# Ecommerce-DjangoREST-challenge
 
-Use os comandos seguintes para instalar a API
-Use the following commands to install the API
+Use os comandos seguintes para instalar a API // Use the following commands to install the API
  
 python -m venv venv
 cd ecommerce
