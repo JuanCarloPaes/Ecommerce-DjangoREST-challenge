@@ -2,10 +2,13 @@
 
 Use os comandos seguintes para instalar a API // Use the following commands to install the API
  
-python -m venv venv
-cd ecommerce
-venv/Scripts/Activate.ps1
-pip install -r requirements.txt
+    python -m venv venv
+
+    cd ecommerce
+
+    venv/Scripts/Activate.ps1
+
+    pip install -r requirements.txt
 
 * Faça um arquivo chamado ".env" dentro da pasta "eshop", em seguida coloque o seguinte script
 * Make a file called ".env" inside the "eshop" folder, then put the following script
@@ -39,8 +42,11 @@ pip install -r requirements.txt
       
       STRIPE_WEBHOOK_SECRET =  (sua chave secreta do stripe webhook//your stripe webhook secret key)
 
-python manage.py makemigrations
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
+      python manage.py makemigrations
+
+      python manage.py migrate
+
+      python manage.py createsuperuser
+
+      python manage.py runserver
   
