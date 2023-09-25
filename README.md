@@ -51,4 +51,4 @@ Use os comandos seguintes para instalar a API // Use the following commands to i
   
       python manage.py runserver
   
-- P.S.: É recomendado usar o Postman para testar a API no seu sistema // Postman is recommended for testing the API on your system 
+- P.S.: É recomendado usar o programa "Postman" para testar a API no seu sistema // "Postman" program is recommended for testing the API on your system 
