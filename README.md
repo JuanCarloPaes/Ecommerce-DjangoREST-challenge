@@ -5,13 +5,10 @@ Use os comandos seguintes para instalar a API // Use the following commands to i
     python -m venv venv
 -
     
+    
      cd ecommerce
--
-     
-     venv/Scripts/Activate.ps1
--    
-
-    pip install -r requirements.txt
+- venv/Scripts/Activate.ps1
+- pip install -r requirements.txt
 -
 * Faça um arquivo chamado ".env" dentro da pasta "eshop", em seguida coloque o seguinte script
 * Make a file called ".env" inside the "eshop" folder, then put the following script
