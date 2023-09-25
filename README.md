@@ -46,10 +46,9 @@ Use os comandos seguintes para instalar a API // Use the following commands to i
       python manage.py migrate
 -
 
-- P.S.: É recomendado usar o Postman para testar a API no seu sistema // Postman is recommended for testing the API on your system 
-
       python manage.py createsuperuser
 -
   
       python manage.py runserver
   
+- P.S.: É recomendado usar o Postman para testar a API no seu sistema // Postman is recommended for testing the API on your system 
